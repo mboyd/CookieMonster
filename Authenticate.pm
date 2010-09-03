@@ -1,9 +1,9 @@
 #!/usr/bin/perl -W
-package CookieAuth::Authenticate;
+package CookieMonster::Authenticate;
 use strict;
 
-use CookieAuth::AuthCert;
-use CookieAuth::AuthForm;
+use CookieMonster::AuthCert;
+use CookieMonster::AuthForm;
 
 use CGI;
 use Digest::SHA qw(sha256_base64);
@@ -15,11 +15,11 @@ sub handler {
 	my $r = shift;
 	my $query = CGI->new($r);
 	
-	if (my $user = CookieAuth::AuthCert::authenticate($r)) {
+	if (my $user = CookieMonster::AuthCert::authenticate($r)) {
 		return success($r, $user);
 	
 	} elsif ($r->method eq 'POST') {
-		if (my $user = CookieAuth::AuthForm::authenticate($r)) {
+		if (my $user = CookieMonster::AuthForm::authenticate($r)) {
 			return success($r, $user);
 		} else {
 			return failure($r);

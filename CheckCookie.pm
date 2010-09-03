@@ -1,5 +1,5 @@
 #!/usr/bin/perl -W
-package CookieAuth::CheckCookie;
+package CookieMonster::CheckCookie;
 
 use strict;
 use CGI;

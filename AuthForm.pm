@@ -1,5 +1,5 @@
 #!/usr/bin/perl -W
-package CookieAuth::AuthForm;
+package CookieMonster::AuthForm;
 use strict;
 
 use CGI;

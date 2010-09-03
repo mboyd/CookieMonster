@@ -1,5 +1,5 @@
 #!/usr/bin/perl -W
-package CookieAuth::AuthCert;
+package CookieMonster::AuthCert;
 use strict;
 
 # Attempt authentication from the specified request, returning a username
