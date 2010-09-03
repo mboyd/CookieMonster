@@ -1,0 +1,47 @@
+body {
+	font-family: sans-serif;
+	width: 400px;
+	margin: 0px auto;
+	color: #FFFFFF;
+	background: #000000;
+}
+
+h2 {
+	text-align: center;
+}
+
+#header {
+	width: 300px;
+	margin: auto;
+}
+
+#header img {
+	display: block;
+	margin: auto;
+}
+
+#body {
+	width: 300px;
+	margin-top: 30px;
+}
+
+#body form {
+	padding-left: 80px;
+	width: 500px;
+	margin: auto;
+}
+
+#body form .label {
+	width: 20em;
+	margin: 5px;
+}
+
+#body form input {
+	margin: 2px;
+}
+
+#body .button {
+	width: 100px;
+	margin: auto;
+	margin-left: 100px;
+}

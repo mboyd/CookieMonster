@@ -71,19 +71,11 @@ sub prompt {
 	my $r = shift;
 	my $resp = CGI->new($r);
 	
-	$r->print($resp->header("text/html"));
-	$r->print($resp->start_html("CookieAuth"));
-	$r->print($resp->h2("Authentication Prompt"));
+	open LOGIN, "login.html" or die "Can't find login.html"
 	
-	$r->print($resp->start_form());
-	$r->print($resp->hidden('dest', $resp->param('dest')));
-	$r->print($resp->hidden('sec', $resp->param('sec')));
-	$r->print($resp->textfield('user', 'Username', 20, 20));
-	$r->print($resp->password_field('pass', '', 20, 20));
-	$r->print($resp->submit('Submit', 'submit'));
-	$r->print($resp->end_form);
-	
-	$r->print($resp->end_html);
+	while (<LOGIN>) {
+		$r->print($_);
+	}
 	
 	return OK;
 }
