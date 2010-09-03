@@ -8,6 +8,7 @@ use CookieMonster::AuthForm;
 use CGI;
 use Digest::SHA qw(sha256_base64);
 use Apache2::Const qw(OK DECLINED FORBIDDEN);
+use File::Basename;
 
 my $SECRET = 'TOPSECRET';
 
@@ -71,8 +72,10 @@ sub prompt {
 	my $r = shift;
 	my $resp = CGI->new($r);
 	
-	open LOGIN, "login.html" or die "Can't find login.html"
-	
+	my $template = dirname(__FILE__) . "/login.html";
+	open LOGIN, $template or die "Can't find $template";
+	$r->content_type("text/html");	
+
 	while (<LOGIN>) {
 		$r->print($_);
 	}
