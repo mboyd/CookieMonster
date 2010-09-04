@@ -13,14 +13,11 @@ sub handler {
 	my $cgi = CGI->new($r);
 	
 	my %token = $cgi->cookie('auth');
-	unless (%token) {
-		$r->log_error("No auth token."); 
+	unless (%token) { 
 		return FORBIDDEN;
 	}
 
 	my $keys = $token{'user'};
-
-	$r->log_error("Got token $keys");
 
 	my $user = $token{'user'};
 	my $ip = $token{'ip'};
@@ -38,7 +35,6 @@ sub handler {
 		return FORBIDDEN;
 	}
 
-	$r->log_error("Approving request.");
 	return OK;
 }
 

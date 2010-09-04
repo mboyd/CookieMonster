@@ -55,82 +55,44 @@ sub success {
 	if (my $dest = $resp->param('dest')) {
 		my $target = ($resp->param('sec') eq '1' ? 'https://' : 'http://') . 
 					$resp->server_name() . $dest;
-		$redirect = $resp->meta({-http_equiv=>'refresh', -content=>"1;$target"});
+		$redirect = "<meta http-equiv=\"Refresh\" content=\"1;url=$target\">";
 	}
 		
-	$r->print($resp->start_html(-head=>$redirect));
-	$r->print(<<END
-		<body>
-			<div id="header">
-				<h2>Welcome to Media1E!</h2>
-				<img src="/auth/images/1E.png" alt="1E">
-			</div>
-		</body>
-		</html>
-END);
+	printTemplate($r, $docRoot . $tmplSuccess, {'redirect' => $redirect});
 
 	return OK;
 }
 
 sub failure {
 	my $r = shift;
-	my $resp = CGI->new($r);
 	
-	$r->print($resp->header("text/html"));
-	$r->print($resp->start_html("CookieAuth"));
-	$r->print($resp->h2("Authentication Failed") . $resp->end_html);
+	printTemplate($r, $docRoot . $tmplFailure, {});
 	
 	return OK;
 }
 
 sub prompt {
 	my $r = shift;
+	my $resp = CGI->new($r);
 	
-	printHeader($r);
-	
-	$r->print(<<END
-		<div id="body">
-			<form method='post'>
-
-				<span class='label'>Username:</span>
-				<input type='text' name='username' value=''> <br>
-
-				<span class='label'>Password:&nbsp;</span>
-				<input type='password' name='password' value=''> <br>
-
-				<span class='button'>
-					<input type='submit' name='submit' value='Log In'>
-				</span>
-			</form>
-			</div>
-		</div>
-	</body>
-	</html>
-END);
+	printTemplate($r, $docRoot . $tmplPrompt, {'dest' => $resp->param('dest'),
+												'sec' => $resp->param('sec')});
 	
 	return OK;
 }
 
-sub printHeader {
+sub printTemplate {
 	my $r = shift;
+	my $file = shift;
+	my %env = %{(shift)};
 	
-	$r->print(<<END
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-			<title>Welcome to Media1E</title>
-			<link rel="stylesheet" href="/auth/style.css">
-		</head>
-
-		<body>
-			<div id="header">
-				<h2>Welcome to Media1E!</h2>
-				<img src="/auth/images/1E.png" alt="1E">
-			</div>
-		
-END
-);	
+	open TMPL, $file or die "Can't open $file";
+	$r->content_type('text/html');
+	
+	while (<TMPL>) {
+		$_ =~ s/\$(\w*)/$env{$1}/g;
+		$r->print($_);
+	}
 }
 
 1;
