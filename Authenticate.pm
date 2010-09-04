@@ -10,6 +10,13 @@ use Digest::SHA qw(sha256_base64);
 use Apache2::Const qw(OK DECLINED FORBIDDEN);
 use File::Basename;
 
+# Fixme: Determine these paths automatically, or provide a better way to 
+# configure them
+my $docRoot = '/var/www/';
+my $tmplPrompt = 'include/login-prompt.html';
+my $tmplSuccess = 'include/login-success.html';
+my $tmplFailure = 'include/login-failure.html';
+
 my $SECRET = 'TOPSECRET';
 
 sub handler {
@@ -52,7 +59,15 @@ sub success {
 	}
 		
 	$r->print($resp->start_html(-head=>$redirect));
-	$r->print($resp->h2("Authentication Sucessful") . $resp->end_html);
+	$r->print(<<END
+		<body>
+			<div id="header">
+				<h2>Welcome to Media1E!</h2>
+				<img src="/auth/images/1E.png" alt="1E">
+			</div>
+		</body>
+		</html>
+END);
 
 	return OK;
 }
@@ -70,17 +85,52 @@ sub failure {
 
 sub prompt {
 	my $r = shift;
-	my $resp = CGI->new($r);
 	
-	my $template = dirname(__FILE__) . "/login.html";
-	open LOGIN, $template or die "Can't find $template";
-	$r->content_type("text/html");	
+	printHeader($r);
+	
+	$r->print(<<END
+		<div id="body">
+			<form method='post'>
 
-	while (<LOGIN>) {
-		$r->print($_);
-	}
+				<span class='label'>Username:</span>
+				<input type='text' name='username' value=''> <br>
+
+				<span class='label'>Password:&nbsp;</span>
+				<input type='password' name='password' value=''> <br>
+
+				<span class='button'>
+					<input type='submit' name='submit' value='Log In'>
+				</span>
+			</form>
+			</div>
+		</div>
+	</body>
+	</html>
+END);
 	
 	return OK;
+}
+
+sub printHeader {
+	my $r = shift;
+	
+	$r->print(<<END
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+			<title>Welcome to Media1E</title>
+			<link rel="stylesheet" href="/auth/style.css">
+		</head>
+
+		<body>
+			<div id="header">
+				<h2>Welcome to Media1E!</h2>
+				<img src="/auth/images/1E.png" alt="1E">
+			</div>
+		
+END
+);	
 }
 
 1;
