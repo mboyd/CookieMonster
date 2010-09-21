@@ -4,6 +4,7 @@ use strict;
 
 use CookieMonster::AuthCert;
 use CookieMonster::AuthForm;
+use CookieMonster::Secret;
 
 use CGI;
 use Digest::SHA qw(sha256_base64);
@@ -12,12 +13,10 @@ use File::Basename;
 
 # Fixme: Determine these paths automatically, or provide a better way to 
 # configure them
-my $docRoot = '/var/www/';
+my $docRoot = '/srv/www/';
 my $tmplPrompt = 'include/login-prompt.html';
 my $tmplSuccess = 'include/login-success.html';
 my $tmplFailure = 'include/login-failure.html';
-
-my $SECRET = 'TOPSECRET';
 
 sub handler {
 	my $r = shift;
@@ -44,7 +43,7 @@ sub success {
 	my $resp = CGI->new($r);
 	
 	my $ip = $r->connection->remote_ip;
-	my $hash = sha256_base64($user . $ip . $SECRET);
+	my $hash = sha256_base64($user . $ip . CookieMonster::Secret::secret());
 
 	my $token = {'user' => $user, 'ip' => $ip, 'hash' => $hash};
 	my $cookie = CGI->cookie(-name=>'auth', -value=>$token);
