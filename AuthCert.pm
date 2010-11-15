@@ -13,7 +13,7 @@ sub authenticate {
 	return unless $user;
 
 	my $aclFile = "/etc/apache2/perl/CookieMonster/cert_acl";
-	open(ACL, "<", $aclFile) or do { warn "Failed to open $aclFile: $!"; return '' }
+	open(ACL, "<", $aclFile) or do { warn "Failed to open $aclFile: $!"; return '' };
 	my @users = <ACL>;
 	close(ACL);
 	chomp @users;
